@@ -1,0 +1,30 @@
+pipeline {
+  agent any
+
+  stages {
+
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build Benchmark Image') {
+      steps {
+        sh '''
+          cd benchmark-runner
+          docker build -t cpu-benchmark:jenkins .
+        '''
+      }
+    }
+
+    stage('Run Benchmark') {
+      steps {
+        sh '''
+          docker run cpu-benchmark:jenkins
+        '''
+      }
+    }
+
+  }
+}
